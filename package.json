@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Full-stack Mess Management QR Code Attendance System with React, Node.js, Express, and PostgreSQL",
   "scripts": {
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "test": "cd server && node test-e2e.js",
-    "seed": "cd server && npm run seed"
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "test": "cd backend && node test-e2e.js",
+    "seed": "cd backend && npm run seed"
   },
   "keywords": ["qr-code", "mess-management", "react", "express", "postgresql", "jwt"]
 }
-

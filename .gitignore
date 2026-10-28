@@ -9,6 +9,7 @@ build/
 
 # Environment files with sensitive credentials
 .env
+backend/.env
 server/.env
 *.local
 
@@ -17,6 +18,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.log
+
+# Sub-repositories
+Kamar-taj/
 
 # OS & Editor
 .DS_Store
