@@ -147,3 +147,9 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Frontend build & env rules
+frontend/dist/
+frontend/node_modules/
+.env
+!.env.example
