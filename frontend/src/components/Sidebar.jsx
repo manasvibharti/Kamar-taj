@@ -17,7 +17,7 @@ export default function Sidebar({ user, activeTab = 'dashboard', onTabChange }) 
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'qr', label: 'QR attendance', icon: QrCode, badge: 'Live' },
     { id: 'opt-in-out', label: 'Meal Opt In/Out', icon: SlidersHorizontal, badge: 'Cutoff 3h' },
-    { id: 'budget', label: 'My meal budget', icon: Wallet },
+    { id: 'budget', label: 'Opt-out refunds', icon: Wallet },
     { id: 'expenses', label: 'Food expenses', icon: Receipt },
 
     { id: 'feedback', label: 'Meal feedback', icon: MessageSquare },

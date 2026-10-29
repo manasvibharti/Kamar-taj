@@ -510,19 +510,19 @@ export default function StudentPortal({
             </p>
           </div>
 
-          {/* Card 3: October budget left */}
+          {/* Card 3: Money saved from opting out as refund */}
           <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-            <span className="text-xs font-medium text-slate-500">October budget left</span>
-            <div className="text-2xl font-bold text-indigo-600 mt-2">
+            <span className="text-xs font-medium text-slate-500">Opt-out refund saved</span>
+            <div className="text-2xl font-bold text-emerald-600 mt-2">
               ₹1,680
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              ₹2,820 spent of ₹4,500
+              Saved from opting out of meals
             </p>
           </div>
         </div>
 
-        {/* Middle Section: On the menu today & Your October budget */}
+        {/* Middle Section: On the menu today & Your Opt-out refunds */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left: On the menu today (8 cols) */}
           <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
@@ -582,32 +582,32 @@ export default function StudentPortal({
             </div>
           </div>
 
-          {/* Right: Your October budget (4 cols) */}
+          {/* Right: Your Opt-Out Refund Savings (4 cols) */}
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-slate-900">Your October budget</h2>
-                <Wallet className="w-4 h-4 text-indigo-600" />
+                <h2 className="text-base font-bold text-slate-900">Opt-out refund saved</h2>
+                <Wallet className="w-4 h-4 text-emerald-600" />
               </div>
 
               <div className="mt-4">
-                <div className="text-3xl font-extrabold text-slate-900 tracking-tight">₹1,680</div>
-                <p className="text-xs text-slate-500 mt-1">remaining of ₹4,500</p>
+                <div className="text-3xl font-extrabold text-emerald-600 tracking-tight">₹1,680</div>
+                <p className="text-xs text-slate-500 mt-1">saved from opted-out meals</p>
               </div>
 
-              {/* Progress Bar */}
+              {/* Savings Progress Bar */}
               <div className="mt-4">
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '63%' }} />
+                  <div className="bg-emerald-500 h-full rounded-full" style={{ width: '37.3%' }} />
                 </div>
                 <div className="flex items-center justify-between text-xs text-slate-400 mt-2 font-medium">
-                  <span>63% spent</span>
+                  <span className="text-emerald-700 font-bold">₹1,680 refund saved</span>
                   <span>5 days left</span>
                 </div>
               </div>
 
               <p className="text-[11px] text-slate-400 leading-relaxed mt-6">
-                Only opted-in meals are charged. Special meal extras are listed separately.
+                Only opted-in meals are charged. Any meal opted out before the 3-hour cutoff is credited back to your refund.
               </p>
             </div>
 
@@ -615,7 +615,7 @@ export default function StudentPortal({
               onClick={() => onTabChange && onTabChange('budget')}
               className="mt-6 w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5 transition-colors"
             >
-              <span>See budget breakdown</span>
+              <span>See refund breakdown</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -677,7 +677,7 @@ export default function StudentPortal({
 
   // -------------------------------------------------------------
   // -------------------------------------------------------------
-  // VIEW: MEAL BUDGET (activeTab === 'budget')
+  // VIEW: OPT-OUT REFUNDS (activeTab === 'budget')
   // -------------------------------------------------------------
   if (activeTab === 'budget') {
     return (
@@ -686,10 +686,10 @@ export default function StudentPortal({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Every meal, accounted for.
+              Your opt-out refunds & savings.
             </h1>
             <p className="text-slate-500 text-sm mt-1">
-              A clear view of your October allowance and the meals charged to it.
+              Transparent accounting of every meal opted out and credited back as refund.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -703,7 +703,7 @@ export default function StudentPortal({
         {/* Top 3 Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-            <span className="text-xs font-medium text-slate-500">Monthly meal budget</span>
+            <span className="text-xs font-medium text-slate-500">Monthly mess fee</span>
             <div className="text-2xl font-bold text-slate-900 mt-2">
               ₹4,500
             </div>
@@ -723,68 +723,68 @@ export default function StudentPortal({
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-            <span className="text-xs font-medium text-slate-500">Remaining balance</span>
-            <div className="text-2xl font-bold text-indigo-600 mt-2">
+            <span className="text-xs font-medium text-slate-500">Total refund saved</span>
+            <div className="text-2xl font-bold text-emerald-600 mt-2">
               ₹1,680
             </div>
-            <p className="text-xs text-slate-400 mt-1">
-              37.3% of your budget available
+            <p className="text-xs text-emerald-600/80 font-medium mt-1">
+              Money saved from opting out
             </p>
           </div>
         </div>
 
-        {/* Middle Section: October at a glance & Budget note */}
+        {/* Middle Section: October at a glance & Refund note */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-slate-900">October at a glance</h2>
+                <h2 className="text-base font-bold text-slate-900">October refunds & savings at a glance</h2>
                 <div className="flex items-center gap-4 text-xs font-semibold">
-                  <span className="text-slate-700">₹2,820 spent</span>
-                  <span className="text-indigo-600">₹1,680 available</span>
+                  <span className="text-slate-700">₹2,820 consumed</span>
+                  <span className="text-emerald-600 font-bold">₹1,680 refund saved</span>
                 </div>
               </div>
 
               {/* Progress bar */}
               <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-6">
-                <div className="bg-indigo-600 h-full rounded-full" style={{ width: '62.7%' }} />
+                <div className="bg-emerald-500 h-full rounded-full" style={{ width: '37.3%' }} />
               </div>
 
               {/* 3 Stats: Breakfasts, Lunches, Dinners */}
               <div className="grid grid-cols-3 gap-4 pt-2 border-t border-slate-100">
                 <div>
                   <div className="text-2xl font-extrabold text-slate-900">20</div>
-                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Breakfasts</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Breakfasts Taken</div>
                   <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹30 × 20 = ₹600</div>
                 </div>
                 <div>
                   <div className="text-2xl font-extrabold text-slate-900">19</div>
-                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Lunches</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Lunches Taken</div>
                   <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹60 × 19 = ₹1,140</div>
                 </div>
                 <div>
                   <div className="text-2xl font-extrabold text-slate-900">18</div>
-                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Dinners</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Dinners Taken</div>
                   <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹60 × 18 = ₹1,080</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-4 bg-[#f8f9ff] rounded-2xl border border-indigo-100/80 p-6 shadow-sm flex flex-col justify-between">
+          <div className="lg:col-span-4 bg-[#f8fdf9] rounded-2xl border border-emerald-100/90 p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <span className="inline-block text-[10px] font-bold text-indigo-600 bg-indigo-100/70 px-2 py-0.5 rounded-md uppercase tracking-wider mb-3">
-                Budget note
+              <span className="inline-block text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md uppercase tracking-wider mb-3">
+                Refund note
               </span>
               <h3 className="text-base font-bold text-slate-900 mb-2">
-                No surprises on your plate.
+                Zero waste. Full refund.
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Charges appear after each meal session. Today's Lunch (₹60) is still pending and isn't in your spent total.
+                By opting out 3 hours before meal prep begins, the kitchen avoids wasting ingredients and automatically credits the full meal amount back to your account.
               </p>
             </div>
-            <p className="text-[11px] text-slate-400 mt-4 pt-3 border-t border-indigo-100/60">
-              Only opted-in meals are charged to your monthly ledger.
+            <p className="text-[11px] text-slate-400 mt-4 pt-3 border-t border-emerald-100/60">
+              Refunds accumulate automatically and adjust in your semester mess ledger.
             </p>
           </div>
         </div>
