@@ -19,6 +19,9 @@ yarn-debug.log*
 yarn-error.log*
 *.log
 
+# Local PostgreSQL data
+backend/pgdata/
+
 # Sub-repositories
 Kamar-taj/
 
