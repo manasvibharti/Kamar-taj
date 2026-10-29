@@ -12,11 +12,11 @@ import {
   ChevronDown
 } from 'lucide-react';
 
-export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
+export default function Sidebar({ user, activeTab = 'dashboard', onTabChange }) {
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'qr', label: 'QR attendance', icon: QrCode, badge: 'Live' },
-    { id: 'preferences', label: 'Meal preferences', icon: SlidersHorizontal },
+    { id: 'opt-in-out', label: 'Meal Opt In/Out', icon: SlidersHorizontal, badge: 'Cutoff 3h' },
     { id: 'budget', label: 'My meal budget', icon: Wallet },
     { id: 'expenses', label: 'Food expenses', icon: Receipt },
     { id: 'special', label: 'Special meals', icon: Sparkles },
@@ -26,7 +26,7 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
   return (
     <aside className="w-64 bg-[#fbfcfd] border-r border-slate-200 min-h-[calc(100vh-4rem)] p-4 flex flex-col justify-between hidden md:flex shrink-0">
       <div className="space-y-6">
-        {/* Hostel / Mess selector card */}
+        {/* Hostel / Mess selector card matching Screenshot 2 */}
         <div className="bg-white border border-slate-200/80 rounded-xl p-3 shadow-sm hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
@@ -34,7 +34,7 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
             </div>
             <div>
               <div className="text-xs font-bold text-slate-800">
-                {user?.hostel || 'North Block Mess'}
+                Patel Mess
               </div>
               <div className="text-[10px] text-slate-400 font-medium">
                 {user?.role === 'student' ? 'Student Workspace' : 'Staff Terminal'}
@@ -68,7 +68,9 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-600 text-white uppercase tracking-wider">
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
+                      item.id === 'qr' ? 'bg-indigo-600 text-white' : 'bg-emerald-100 text-emerald-800'
+                    }`}>
                       {item.badge}
                     </span>
                   )}
@@ -87,11 +89,11 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
             <span>Need a hand?</span>
           </div>
           <p className="text-[11px] text-slate-500 leading-relaxed mb-2">
-            Your mess committee is here to assist with any dietary or scan issues.
+            The Kamar-Taj mess committee is here to assist with meal cutoffs, refunds, and scan queries.
           </p>
           <a
             href="#contact"
-            onClick={(e) => { e.preventDefault(); alert("Mess Committee Helpline: +91 98765 43210 (Priya Mehta - Mess Secretary)"); }}
+            onClick={(e) => { e.preventDefault(); alert("Patel Mess Committee: +91 98765 43210 (Mess Secretary)"); }}
             className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
           >
             Contact admin &rarr;
@@ -108,7 +110,7 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
                 {user.name}
               </div>
               <div className="text-[10px] text-slate-500 truncate">
-                {user.hostel || 'Room N-204'}
+                Patel Mess ({user.roll_no || 'Student'})
               </div>
             </div>
           </div>
@@ -117,4 +119,3 @@ export default function Sidebar({ user, activeTab = 'qr', onTabChange }) {
     </aside>
   );
 }
-
