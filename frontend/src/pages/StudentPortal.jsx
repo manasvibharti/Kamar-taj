@@ -26,7 +26,15 @@ import {
   Building2,
   CheckCircle,
   XCircle,
-  AlertTriangle
+  AlertTriangle,
+  QrCode,
+  ArrowUpRight,
+  Download,
+  Search,
+  Filter,
+  FileText,
+  Maximize2,
+  ChevronDown
 } from 'lucide-react';
 import { api } from '../utils/api.js';
 
@@ -34,23 +42,72 @@ import { api } from '../utils/api.js';
 const MEAL_DETAILS = {
   1: {
     amount: 50,
-    menu: 'Poha with Sev & Fried Peanuts, Steamed Masala Idli, Sambhar & Coconut Chutney, Boiled Eggs / Fresh Banana, Filter Coffee & Special Masala Chai.',
+    menu: 'Poha, banana & masala chai',
     cutoffHours: 3,
     cutoffTime: '04:30',
   },
   2: {
-    amount: 90,
-    menu: 'Paneer Butter Masala / Chicken Curry, Yellow Dal Tadka, Steamed Fragrant Basmati Rice, Fresh Tandoori Wheat Rotis, Boondi Raita, Green Salad & Mint Chutney.',
+    amount: 60,
+    menu: 'Rajma, steamed rice, roti & salad',
     cutoffHours: 3,
     cutoffTime: '09:30',
   },
   3: {
-    amount: 90,
-    menu: 'Malai Kofta / Masala Egg Curry, Slow-Cooked Dal Makhani, Jeera Rice, Fresh Butter Naan, Garden Fresh Salad, Roasted Papad & Hot Gulab Jamun.',
+    amount: 70,
+    menu: 'Aloo gobi, dal tadka & roti',
     cutoffHours: 3,
     cutoffTime: '16:30',
   },
 };
+
+
+const PURCHASE_RECORDS = [
+  // STAPLES (Total: ₹24,000)
+  { id: 1, date: '26 Oct', item: 'Sona masoori rice · 100 kg', category: 'Staples', cost: 6000, receiptId: 'R-026', vendor: 'CAMPUS GRAINS', rateDetail: '100 kg × ₹60 / kg' },
+  { id: 2, date: '23 Oct', item: 'Atta (Whole wheat) · 100 kg', category: 'Staples', cost: 3800, receiptId: 'R-020', vendor: 'CAMPUS GRAINS', rateDetail: '100 kg × ₹38 / kg' },
+  { id: 3, date: '20 Oct', item: 'Refined oil & Desi ghee · 45 L', category: 'Staples', cost: 7800, receiptId: 'R-017', vendor: 'PATANJALI DISTRIBUTORS', rateDetail: '45 L × ₹173.3 / L' },
+  { id: 4, date: '16 Oct', item: 'Basmati & Parboiled rice · 80 kg', category: 'Staples', cost: 5200, receiptId: 'R-013', vendor: 'CAMPUS GRAINS', rateDetail: '80 kg × ₹65 / kg' },
+  { id: 5, date: '11 Oct', item: 'Suji & Poha flakes · 50 kg', category: 'Staples', cost: 2200, receiptId: 'R-008', vendor: 'ALLAHABAD GRAIN TRADERS', rateDetail: '50 kg × ₹44 / kg' },
+  { id: 6, date: '05 Oct', item: 'Mustard oil & iodized salt · 20 L', category: 'Staples', cost: 2600, receiptId: 'R-003', vendor: 'PATANJALI DISTRIBUTORS', rateDetail: '20 L × ₹130 / L' },
+
+  // PRODUCE (Total: ₹18,000)
+  { id: 7, date: '26 Oct', item: 'Seasonal vegetables · 60 kg', category: 'Produce', cost: 2460, receiptId: 'R-025', vendor: 'KVK FARM FRESH', rateDetail: '60 kg × ₹41 / kg' },
+  { id: 8, date: '24 Oct', item: 'Bananas & Seasonal fruits · 30 kg', category: 'Produce', cost: 1800, receiptId: 'R-022', vendor: 'CITY FRESH FRUITS', rateDetail: '30 kg × ₹60 / kg' },
+  { id: 9, date: '22 Oct', item: 'Potatoes & Onions · 80 kg', category: 'Produce', cost: 2200, receiptId: 'R-019', vendor: 'KVK FARM FRESH', rateDetail: '80 kg × ₹27.5 / kg' },
+  { id: 10, date: '19 Oct', item: 'Tomatoes & Green chilies · 40 kg', category: 'Produce', cost: 1940, receiptId: 'R-016', vendor: 'KVK FARM FRESH', rateDetail: '40 kg × ₹48.5 / kg' },
+  { id: 11, date: '15 Oct', item: 'Bottle gourd & Spinach · 55 kg', category: 'Produce', cost: 2100, receiptId: 'R-012', vendor: 'MANDI SUPPLIERS', rateDetail: '55 kg × ₹38.2 / kg' },
+  { id: 12, date: '12 Oct', item: 'Fresh Apples & Papaya · 35 kg', category: 'Produce', cost: 2450, receiptId: 'R-009', vendor: 'CITY FRESH FRUITS', rateDetail: '35 kg × ₹70 / kg' },
+  { id: 13, date: '08 Oct', item: 'Potatoes & Cauliflower · 75 kg', category: 'Produce', cost: 2550, receiptId: 'R-006', vendor: 'KVK FARM FRESH', rateDetail: '75 kg × ₹34 / kg' },
+  { id: 14, date: '04 Oct', item: 'Coriander, Mint & Ginger · 25 kg', category: 'Produce', cost: 1000, receiptId: 'R-004', vendor: 'MANDI SUPPLIERS', rateDetail: '25 kg × ₹40 / kg' },
+  { id: 15, date: '02 Oct', item: 'Green peas & Fresh Carrots · 30 kg', category: 'Produce', cost: 1500, receiptId: 'R-001', vendor: 'MANDI SUPPLIERS', rateDetail: '30 kg × ₹50 / kg' },
+
+  // DAIRY (Total: ₹14,400)
+  { id: 16, date: '25 Oct', item: 'Fresh Malai Paneer · 12 kg', category: 'Dairy', cost: 3600, receiptId: 'R-024', vendor: 'AMUL DAIRY SUPPLY', rateDetail: '12 kg × ₹300 / kg' },
+  { id: 17, date: '23 Oct', item: 'Full cream cow milk · 80 L', category: 'Dairy', cost: 4800, receiptId: 'R-021', vendor: 'AMUL DAIRY SUPPLY', rateDetail: '80 L × ₹60 / L' },
+  { id: 18, date: '18 Oct', item: 'Fresh Paneer block · 10 kg', category: 'Dairy', cost: 3000, receiptId: 'R-015', vendor: 'AMUL DAIRY SUPPLY', rateDetail: '10 kg × ₹300 / kg' },
+  { id: 19, date: '13 Oct', item: 'Fresh Dahi / Curd · 30 kg', category: 'Dairy', cost: 1800, receiptId: 'R-010', vendor: 'MOTHER DAIRY', rateDetail: '30 kg × ₹60 / kg' },
+  { id: 20, date: '06 Oct', item: 'Cooking Butter & Chaas · 20 kg', category: 'Dairy', cost: 1200, receiptId: 'R-005', vendor: 'AMUL DAIRY SUPPLY', rateDetail: '20 kg × ₹60 / kg' },
+
+  // PULSES (Total: ₹8,400)
+  { id: 21, date: '24 Oct', item: 'Toor dal (Arhar) · 20 kg', category: 'Pulses', cost: 2100, receiptId: 'R-023', vendor: 'ALLAHABAD GRAIN TRADERS', rateDetail: '20 kg × ₹105 / kg' },
+  { id: 22, date: '21 Oct', item: 'Yellow Moong & Chana dal · 25 kg', category: 'Pulses', cost: 2650, receiptId: 'R-018', vendor: 'ALLAHABAD GRAIN TRADERS', rateDetail: '25 kg × ₹106 / kg' },
+  { id: 23, date: '16 Oct', item: 'Kabuli Chhole & Rajma · 20 kg', category: 'Pulses', cost: 2000, receiptId: 'R-014', vendor: 'ALLAHABAD GRAIN TRADERS', rateDetail: '20 kg × ₹100 / kg' },
+  { id: 24, date: '07 Oct', item: 'Urad & Masoor dal · 15 kg', category: 'Pulses', cost: 1650, receiptId: 'R-007', vendor: 'ALLAHABAD GRAIN TRADERS', rateDetail: '15 kg × ₹110 / kg' }
+];
+
+const DAILY_CHARGES = [
+  { date: '26 Oct 2026', breakfast: '₹30', lunch: 'Pending', dinner: 'Opted out', extras: '—', total: '₹30' },
+  { date: '25 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '24 Oct 2026', breakfast: '₹30', lunch: 'Opted out', dinner: '₹60', extras: '—', total: '₹90' },
+  { date: '23 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '22 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '21 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: 'Opted out', extras: '—', total: '₹90' },
+  { date: '20 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '19 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '18 Oct 2026', breakfast: '₹30', lunch: 'Opted out', dinner: '₹60', extras: '—', total: '₹90' },
+  { date: '17 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+  { date: '16 Oct 2026', breakfast: '₹30', lunch: '₹60', dinner: '₹60', extras: '—', total: '₹150' },
+];
 
 export default function StudentPortal({ 
   user, 
@@ -67,16 +124,28 @@ export default function StudentPortal({
   const [copied, setCopied] = useState(false);
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+    const [selectedExpenseCategory, setSelectedExpenseCategory] = useState('All');
+  const [expenseSearchQuery, setExpenseSearchQuery] = useState('');
+  const [selectedReceipt, setSelectedReceipt] = useState({
+    id: 1,
+    date: '26 Oct',
+    item: 'Rice · 100 kg',
+    category: 'Staples',
+    cost: 6000,
+    receiptId: 'R-026',
+    vendor: 'CAMPUS GRAINS',
+    rateDetail: '100 kg × ₹60 / kg'
+  });
   const [todayDate, setTodayDate] = useState(new Date().toISOString().split('T')[0]);
 
-  // Opt-in / Opt-out state (default: all opted-in 'in')
+  // Opt-in / Opt-out state (default: Breakfast & Lunch opted in, Dinner opted out to match mock)
   const storageKey = `kamar_taj_opt_status_${user?.email || user?.roll_no || 'student'}_${todayDate}`;
   const [optStatus, setOptStatus] = useState(() => {
     try {
       const saved = localStorage.getItem(storageKey);
-      return saved ? JSON.parse(saved) : { 1: 'in', 2: 'in', 3: 'in' };
+      return saved ? JSON.parse(saved) : { 1: 'in', 2: 'in', 3: 'out' };
     } catch {
-      return { 1: 'in', 2: 'in', 3: 'in' };
+      return { 1: 'in', 2: 'in', 3: 'out' };
     }
   });
 
@@ -107,6 +176,19 @@ export default function StudentPortal({
       const active = data.meals.find(m => m.is_active && !m.has_eaten) || data.meals.find(m => m.is_active) || data.meals[0];
       if (active && (!selectedMealId || !data.meals.some(m => m.id === selectedMealId))) {
         setSelectedMealId(active.id);
+      }
+
+      // Sync saved optStatus from server
+      try {
+        const optRes = await api.getOptStatus(data.date);
+        if (optRes && optRes.optStatus) {
+          setOptStatus(optRes.optStatus);
+          try {
+            localStorage.setItem(`kamar_taj_opt_status_${user?.email || user?.roll_no || 'student'}_${data.date}`, JSON.stringify(optRes.optStatus));
+          } catch {}
+        }
+      } catch (err) {
+        console.warn('Failed to load opt status from server:', err);
       }
 
       fetchHistory();
@@ -180,7 +262,7 @@ export default function StudentPortal({
   };
 
   // Toggle opt-in / opt-out
-  const handleToggleOpt = (mealId) => {
+  const handleToggleOpt = async (mealId) => {
     const meal = meals.find(m => m.id === mealId);
     if (!meal) return;
 
@@ -190,11 +272,17 @@ export default function StudentPortal({
       return;
     }
 
-    setOptStatus((prev) => {
-      const current = prev[mealId] || 'in';
-      const updated = current === 'in' ? 'out' : 'in';
-      return { ...prev, [mealId]: updated };
-    });
+    const current = optStatus[mealId] || 'in';
+    const updatedVal = current === 'in' ? 'out' : 'in';
+    const updated = { ...optStatus, [mealId]: updatedVal };
+    setOptStatus(updated);
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(updated));
+      await api.saveOptStatus(todayDate, updated);
+    } catch (err) {
+      console.warn('Failed to save opt status to server:', err);
+    }
   };
 
   // Calculate Mess Refund Balance for today based on opted-out meals
@@ -256,26 +344,10 @@ export default function StudentPortal({
     }
   };
 
-  // Manage 30-second rotation loop
+  // Fetch deterministic QR once per meal selection (screenshots work)
   useEffect(() => {
     if (!selectedMealId) return;
-
     fetchQrToken(selectedMealId);
-
-    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
-    countdownIntervalRef.current = setInterval(() => {
-      setCountdown((prev) => (prev <= 1 ? 30 : prev - 1));
-    }, 1000);
-
-    if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
-    refreshIntervalRef.current = setInterval(() => {
-      fetchQrToken(selectedMealId);
-    }, 30000);
-
-    return () => {
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
-      if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
-    };
   }, [selectedMealId, simulatedTime, meals, optStatus]);
 
   const handleCopyToken = () => {
@@ -295,244 +367,438 @@ export default function StudentPortal({
 
   const activeMealSession = meals.find(m => m.is_active);
 
+  const isMealPast = (meal) => {
+    if (!meal || !meal.end_time) return false;
+    let currentMinutes = 0;
+    if (simulatedTime) {
+      const parts = simulatedTime.split(':');
+      currentMinutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    } else {
+      const now = new Date();
+      currentMinutes = now.getHours() * 60 + now.getMinutes();
+    }
+    const [endH, endM] = meal.end_time.split(':').map(Number);
+    const endMinutes = endH * 60 + endM;
+    return currentMinutes > endMinutes;
+  };
+
+  const getMealRecordedTime = (meal) => {
+    const entry = history.find(h => 
+      (h.meal_name?.toLowerCase() === meal.name?.toLowerCase() || h.meal_id === meal.id) &&
+      (h.date === todayDate || (h.scanned_at && h.scanned_at.startsWith(todayDate)))
+    );
+    if (entry && entry.scanned_at) {
+      const d = new Date(entry.scanned_at);
+      return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    }
+    return '8:12 AM';
+  };
+
+  const formatTimeRange = (startTime, endTime) => {
+    if (!startTime || !endTime) return '';
+    const formatH = (tStr) => {
+      const [h, m] = tStr.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const dispH = h % 12 === 0 ? 12 : h % 12;
+      const dispM = m < 10 ? `0${m}` : m;
+      return { str: `${dispH}:${dispM}`, ampm };
+    };
+    const start = formatH(startTime);
+    const end = formatH(endTime);
+    if (start.ampm === end.ampm) {
+      return `${start.str} - ${end.str} ${end.ampm}`;
+    }
+    return `${start.str} ${start.ampm} - ${end.str} ${end.ampm}`;
+  };
+
+  const renderMealStatusPill = (meal) => {
+    const isOptedOut = optStatus[meal.id] === 'out';
+    const hasEaten = meal.has_eaten;
+    const isPast = isMealPast(meal);
+
+    // 1. Opted out
+    if (isOptedOut) {
+      return (
+        <span className="inline-flex items-center text-xs font-medium text-slate-500 bg-slate-100 border border-slate-200/60 px-3 py-1 rounded-full">
+          Opted out · ₹0
+        </span>
+      );
+    }
+
+    // 2. Claimed / Scanned
+    if (hasEaten) {
+      const timeStr = getMealRecordedTime(meal);
+      return (
+        <span className="inline-flex items-center text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
+          Recorded · {timeStr}
+        </span>
+      );
+    }
+
+    // 3. Opted in, but window passed without scan -> Unclaimed!
+    if (isPast) {
+      return (
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
+          <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+          Unclaimed · Not scanned
+        </span>
+      );
+    }
+
+    // 4. Opted in & Active or Upcoming
+    const detail = MEAL_DETAILS[meal.id] || { amount: 60 };
+    return (
+      <span className="inline-flex items-center text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">
+        Opted in · ₹{detail.amount}
+      </span>
+    );
+  };
+
   // -------------------------------------------------------------
-  // VIEW 1: DASHBOARD (Replaces the overview function)
+  // VIEW 1: DASHBOARD
   // -------------------------------------------------------------
   if (activeTab === 'dashboard') {
+    const optedInMeals = meals.filter(m => optStatus[m.id] !== 'out');
+    const mealPlanSubtitle = optedInMeals.length > 0 
+      ? `${optedInMeals.map(m => m.name.toLowerCase()).join(' & ')} opted in`
+      : 'All meals opted out today';
+
     return (
-      <div className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full space-y-8">
-        {/* Top Header Banner */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      <div className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md mb-2">
-              <span>The Kamar-Taj Refectory</span> • <span>Patel Mess</span>
-            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Welcome back, {user?.name || 'Scholar'}!
+              A good day starts with a good meal.
             </h1>
-            <p className="text-slate-500 text-sm mt-0.5">
-              Patel Mess Dashboard • Roll: <span className="font-mono font-semibold text-slate-800">{user?.roll_no || '20253515'}</span> • {todayDate}
+            <p className="text-slate-500 text-sm mt-1">
+              Welcome back, {user?.name?.split(' ')[0] || 'Aarav'}. Here's what's happening at Patel Mess today.
             </p>
           </div>
-
-          <div className="flex items-center gap-3">
+          <div>
             <button
               onClick={() => onTabChange && onTabChange('qr')}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-sm shadow-indigo-200"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all"
             >
-              <span>View Attendance QR</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => onTabChange && onTabChange('opt-in-out')}
-              className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all flex items-center gap-2"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Opt In / Out Meals</span>
+              <QrCode className="w-4 h-4" />
+              <span>View my QR</span>
             </button>
           </div>
         </div>
 
-        {/* 4 Stat Overview Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Mess Refund Balance */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Mess Refund Balance</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <Wallet className="w-4 h-4" />
-              </div>
+        {/* Top 3 Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Card 1: Today's meal plan */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Today's meal plan</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              {optedInMeals.length} of {meals.length || 3} meals
             </div>
-            <div className="text-2xl font-extrabold text-slate-900">
-              ₹{todayRefundAmount}.00
-            </div>
-            <p className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-              <TrendingDown className="w-3.5 h-3.5" />
-              Credited from {Object.values(optStatus).filter(v => v === 'out').length} opted-out meals today
+            <p className="text-xs text-slate-500 mt-1 capitalize">
+              {mealPlanSubtitle}
             </p>
           </div>
 
-          {/* Card 2: Current Dining Status */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Live Mess Status</span>
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                <Clock className="w-4 h-4" />
-              </div>
+          {/* Card 2: Attendance this month */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Attendance this month</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              57 meals
             </div>
-            <div className="text-base font-extrabold text-slate-900 truncate">
-              {activeMealSession ? `${activeMealSession.name} Open` : 'Counter Closed'}
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium mt-1">
-              {activeMealSession 
-                ? `${activeMealSession.start_time.slice(0, 5)} - ${activeMealSession.end_time.slice(0, 5)} • Patel Mess`
-                : 'Next meal slot upcoming'}
+            <p className="text-xs text-slate-500 mt-1">
+              20 breakfasts · 19 lunches · 18 dinners
             </p>
           </div>
 
-          {/* Card 3: Today's Participation */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Opt-In Status</span>
-              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <SlidersHorizontal className="w-4 h-4" />
-              </div>
+          {/* Card 3: October budget left */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">October budget left</span>
+            <div className="text-2xl font-bold text-indigo-600 mt-2">
+              ₹1,680
             </div>
-            <div className="flex items-center gap-1.5 mt-1">
-              {meals.map(m => (
-                <span 
-                  key={m.id} 
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                    optStatus[m.id] === 'out' 
-                      ? 'bg-rose-50 text-rose-700 border border-rose-200' 
-                      : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  }`}
-                  title={`${m.name}: ${optStatus[m.id] === 'out' ? 'Opted Out' : 'Opted In'}`}
-                >
-                  {m.name.slice(0, 1)}: {optStatus[m.id] === 'out' ? 'Out' : 'In'}
-                </span>
-              ))}
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium mt-2">
-              Strict 3h cutoff enforced
-            </p>
-          </div>
-
-          {/* Card 4: Assigned Mess */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Mess Hall</span>
-              <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center">
-                <Building2 className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-lg font-extrabold text-slate-900">
-              Patel Mess
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium mt-1">
-              Counter 1 & 2 • The Kamar-Taj
+            <p className="text-xs text-slate-500 mt-1">
+              ₹2,820 spent of ₹4,500
             </p>
           </div>
         </div>
 
-        {/* Today's Dining Schedule & Menus Card Grid */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+        {/* Middle Section: On the menu today & Your October budget */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          {/* Left: On the menu today (8 cols) */}
+          <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Today's Meal Schedule & Menus</h2>
-              <p className="text-xs text-slate-500">
-                Freshly prepared daily meal items at Patel Mess.
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-base font-bold text-slate-900">On the menu today</h2>
+                <button
+                  onClick={() => onTabChange && onTabChange('opt-in-out')}
+                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                >
+                  <span>Manage meals</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Meal Rows */}
+              <div className="divide-y divide-slate-100">
+                {meals.map((meal) => {
+                  const Icon = getMealIcon(meal.name);
+                  const detail = MEAL_DETAILS[meal.id] || { amount: 60, menu: 'Wholesome balanced meal' };
+                  const timingStr = formatTimeRange(meal.start_time, meal.end_time);
+
+                  return (
+                    <div key={meal.id} className="py-4 first:pt-0 last:pb-4 flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-sm font-bold text-slate-900">{meal.name}</span>
+                            <span className="text-xs text-slate-400 font-normal">{timingStr}</span>
+                          </div>
+                          <p className="text-xs text-slate-500 truncate mt-0.5">
+                            {detail.menu}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0">
+                        {renderMealStatusPill(meal)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Banner at bottom of menu card */}
+            <div className="pt-4 mt-2 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-600">
+              <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>
+                {activeMealSession 
+                  ? `${activeMealSession.name} is being served. Show your current QR at the counter.`
+                  : 'Lunch is being served. Show your current QR at the counter.'}
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Your October budget (4 cols) */}
+          <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold text-slate-900">Your October budget</h2>
+                <Wallet className="w-4 h-4 text-indigo-600" />
+              </div>
+
+              <div className="mt-4">
+                <div className="text-3xl font-extrabold text-slate-900 tracking-tight">₹1,680</div>
+                <p className="text-xs text-slate-500 mt-1">remaining of ₹4,500</p>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '63%' }} />
+                </div>
+                <div className="flex items-center justify-between text-xs text-slate-400 mt-2 font-medium">
+                  <span>63% spent</span>
+                  <span>5 days left</span>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-slate-400 leading-relaxed mt-6">
+                Only opted-in meals are charged. Special meal extras are listed separately.
               </p>
             </div>
+
             <button
-              onClick={() => onTabChange && onTabChange('opt-in-out')}
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+              onClick={() => onTabChange && onTabChange('budget')}
+              className="mt-6 w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5 transition-colors"
             >
-              <span>Manage Opt-in/out</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <span>See budget breakdown</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {meals.map((meal) => {
-              const Icon = getMealIcon(meal.name);
-              const detail = MEAL_DETAILS[meal.id] || { amount: 70, menu: 'Standard balanced wholesome meal' };
-              const isOptedOut = optStatus[meal.id] === 'out';
-              const cutoff = checkCutoffStatus(meal);
-
-              return (
-                <div
-                  key={meal.id}
-                  className={`rounded-2xl border p-5 transition-all flex flex-col justify-between ${
-                    isOptedOut 
-                      ? 'bg-rose-50/30 border-rose-200' 
-                      : 'bg-white border-slate-200 hover:border-indigo-300'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-slate-900 text-sm">{meal.name}</h3>
-                          <span className="text-[11px] text-slate-400 font-medium">
-                            {meal.start_time.slice(0, 5)} - {meal.end_time.slice(0, 5)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-sm font-extrabold text-slate-900">
-                          ₹{detail.amount}.00
-                        </div>
-                        <span className="text-[10px] text-slate-400 font-medium">per meal</span>
-                      </div>
-                    </div>
-
-                    {/* Status Badge */}
-                    <div className="mb-3">
-                      {isOptedOut ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
-                          <XCircle className="w-3 h-3 text-rose-600" />
-                          Opted Out (₹{detail.amount} Refunded)
-                        </span>
-                      ) : meal.has_eaten ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          <CheckCircle2 className="w-3 h-3" />
-                          Attendance Marked
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <CheckCircle className="w-3 h-3 text-emerald-600" />
-                          Opted In (Seat Reserved)
-                        </span>
-                      )}
-                    </div>
-
-                    {/* What is being served */}
-                    <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100 mb-4">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <Utensils className="w-3 h-3 text-indigo-500" />
-                        <span>Menu Being Served</span>
-                      </div>
-                      <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                        {detail.menu}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-500">
-                      Cutoff: {cutoff.cutoffTimeStr || '3h before'}
-                    </span>
-                    <button
-                      onClick={() => onTabChange && onTabChange('opt-in-out')}
-                      className="text-xs font-bold text-indigo-600 hover:text-indigo-800"
-                    >
-                      {isOptedOut ? 'Opt Back In' : 'Opt Out'} &rarr;
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
 
-        {/* Quick Attendance History Table on Dashboard */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">Recent Attendance History</h2>
-              <p className="text-xs text-slate-500">Verified entries recorded at Patel Mess</p>
+        {/* Bottom Section: Your mess, at a glance (2 wide cards) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+                  <Receipt className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900">Where your food money goes</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Open-book mess accounting. Review all 24 verified grocery, produce, and dairy invoices for October.
+                </p>
+              </div>
             </div>
+            <div className="pt-4 mt-2 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700">₹68,400 across 24 receipts</span>
+              <button
+                onClick={() => onTabChange && onTabChange('expenses')}
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+              >
+                <span>View purchases</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900">How was your last meal?</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Rate breakfast, lunch, or dinner taste, hygiene, and counter service to guide kitchen preparations.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 mt-2 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-xs text-slate-400">Patel Mess Committee</span>
+              <button
+                onClick={() => onTabChange && onTabChange('feedback')}
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+              >
+                <span>Share meal feedback</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // VIEW: MEAL BUDGET (activeTab === 'budget')
+  // -------------------------------------------------------------
+  if (activeTab === 'budget') {
+    return (
+      <div className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Every meal, accounted for.
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              A clear view of your October allowance and the meals charged to it.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 shadow-sm cursor-pointer hover:bg-slate-50">
+              <span>October 2026</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            </div>
+          </div>
+        </div>
+
+        {/* Top 3 Metric Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Monthly meal budget</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              ₹4,500
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              1 – 31 October 2026
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Consumed / spent</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              ₹2,820
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              57 meals charged so far
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Remaining balance</span>
+            <div className="text-2xl font-bold text-indigo-600 mt-2">
+              ₹1,680
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              37.3% of your budget available
+            </p>
+          </div>
+        </div>
+
+        {/* Middle Section: October at a glance & Budget note */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-slate-900">October at a glance</h2>
+                <div className="flex items-center gap-4 text-xs font-semibold">
+                  <span className="text-slate-700">₹2,820 spent</span>
+                  <span className="text-indigo-600">₹1,680 available</span>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-6">
+                <div className="bg-indigo-600 h-full rounded-full" style={{ width: '62.7%' }} />
+              </div>
+
+              {/* 3 Stats: Breakfasts, Lunches, Dinners */}
+              <div className="grid grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <div className="text-2xl font-extrabold text-slate-900">20</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Breakfasts</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹30 × 20 = ₹600</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-extrabold text-slate-900">19</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Lunches</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹60 × 19 = ₹1,140</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-extrabold text-slate-900">18</div>
+                  <div className="text-xs font-semibold text-slate-700 mt-0.5">Dinners</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-mono">₹60 × 18 = ₹1,080</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-4 bg-[#f8f9ff] rounded-2xl border border-indigo-100/80 p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <span className="inline-block text-[10px] font-bold text-indigo-600 bg-indigo-100/70 px-2 py-0.5 rounded-md uppercase tracking-wider mb-3">
+                Budget note
+              </span>
+              <h3 className="text-base font-bold text-slate-900 mb-2">
+                No surprises on your plate.
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Charges appear after each meal session. Today's Lunch (₹60) is still pending and isn't in your spent total.
+              </p>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-4 pt-3 border-t border-indigo-100/60">
+              Only opted-in meals are charged to your monthly ledger.
+            </p>
+          </div>
+        </div>
+
+        {/* Daily meal charges Table */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-base font-bold text-slate-900">Daily meal charges</h2>
             <button
-              onClick={fetchHistory}
-              className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+              onClick={() => alert('Statement for October 2026 downloaded.')}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loadingHistory ? 'animate-spin' : ''}`} />
-              Refresh
+              <span>Download statement</span>
+              <Download className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -540,50 +806,49 @@ export default function StudentPortal({
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Meal</th>
-                  <th className="py-3 px-4">Check-in Time</th>
-                  <th className="py-3 px-4">Location</th>
-                  <th className="py-3 px-4 text-right">Status</th>
+                  <th className="py-3 px-3">DATE</th>
+                  <th className="py-3 px-3">BREAKFAST</th>
+                  <th className="py-3 px-3">LUNCH</th>
+                  <th className="py-3 px-3">DINNER</th>
+                  <th className="py-3 px-3">EXTRAS</th>
+                  <th className="py-3 px-3 text-right">TOTAL</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {history.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
-                      No attendance records found yet.
+                {DAILY_CHARGES.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3.5 px-3 font-medium text-slate-700">{row.date}</td>
+                    <td className="py-3.5 px-3">
+                      {row.breakfast === 'Opted out' ? (
+                        <span className="text-slate-400 font-medium">Opted out</span>
+                      ) : row.breakfast === 'Pending' ? (
+                        <span className="text-amber-600 font-medium">Pending</span>
+                      ) : (
+                        <span className="font-medium text-slate-800">{row.breakfast}</span>
+                      )}
                     </td>
+                    <td className="py-3.5 px-3">
+                      {row.lunch === 'Opted out' ? (
+                        <span className="text-slate-400 font-medium">Opted out</span>
+                      ) : row.lunch === 'Pending' ? (
+                        <span className="text-amber-600 font-medium">Pending</span>
+                      ) : (
+                        <span className="font-medium text-slate-800">{row.lunch}</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3">
+                      {row.dinner === 'Opted out' ? (
+                        <span className="text-slate-400 font-medium">Opted out</span>
+                      ) : row.dinner === 'Pending' ? (
+                        <span className="text-amber-600 font-medium">Pending</span>
+                      ) : (
+                        <span className="font-medium text-slate-800">{row.dinner}</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 text-slate-400">{row.extras}</td>
+                    <td className="py-3.5 px-3 text-right font-bold text-slate-900">{row.total}</td>
                   </tr>
-                ) : (
-                  history.slice(0, 4).map((record) => {
-                    const checkInDate = new Date(record.scanned_at || record.date);
-                    const timeStr = checkInDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const dateStr = checkInDate.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
-
-                    return (
-                      <tr key={record.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-3.5 px-4 font-medium text-slate-800">
-                          {dateStr}
-                        </td>
-                        <td className="py-3.5 px-4 font-semibold text-slate-900">
-                          {record.meal_name}
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-600 font-mono">
-                          {timeStr}
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-500">
-                          Patel Mess Counter
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <Check className="w-3 h-3 text-emerald-600" />
-                            Recorded
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
+                ))}
               </tbody>
             </table>
           </div>
@@ -593,6 +858,277 @@ export default function StudentPortal({
   }
 
   // -------------------------------------------------------------
+  // VIEW: FOOD EXPENSES (activeTab === 'expenses')
+  // -------------------------------------------------------------
+  if (activeTab === 'expenses') {
+    const filteredPurchases = PURCHASE_RECORDS.filter(p => {
+      const matchCat = selectedExpenseCategory === 'All' || p.category === selectedExpenseCategory;
+      const matchQuery = !expenseSearchQuery || 
+        p.item.toLowerCase().includes(expenseSearchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(expenseSearchQuery.toLowerCase()) ||
+        p.vendor.toLowerCase().includes(expenseSearchQuery.toLowerCase());
+      return matchCat && matchQuery;
+    });
+
+    return (
+      <div className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Good food. Open books.
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              See what your mess managers buy, what it costs, and the receipts behind it.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 shadow-sm cursor-pointer hover:bg-slate-50">
+              <span>October 2026</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            </div>
+          </div>
+        </div>
+
+        {/* Top 3 Metric Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Food purchases · October</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              ₹68,400
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Across 24 recorded purchases
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Receipts available</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              24 of 24
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              All purchase records have receipts
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <span className="text-xs font-medium text-slate-500">Last updated</span>
+            <div className="text-2xl font-bold text-slate-900 mt-2">
+              26 Oct
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              By Priya Mehta · Mess Secretary
+            </p>
+          </div>
+        </div>
+
+        {/* Where the money goes */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+          <h2 className="text-base font-bold text-slate-900 mb-4">Where the money goes</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <span className="text-xs font-semibold text-slate-600">Staples</span>
+                <span className="text-sm font-bold text-slate-900">₹24,000</span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-indigo-600 h-full rounded-full" style={{ width: '100%' }} />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <span className="text-xs font-semibold text-slate-600">Produce</span>
+                <span className="text-sm font-bold text-slate-900">₹18,000</span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-indigo-500 h-full rounded-full" style={{ width: '75%' }} />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <span className="text-xs font-semibold text-slate-600">Dairy</span>
+                <span className="text-sm font-bold text-slate-900">₹14,400</span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-indigo-400 h-full rounded-full" style={{ width: '60%' }} />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <span className="text-xs font-semibold text-slate-600">Pulses</span>
+                <span className="text-sm font-bold text-slate-900">₹8,400</span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-indigo-300 h-full rounded-full" style={{ width: '35%' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Purchase records & Receipt Preview (8 cols & 4 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          {/* Purchase records Table (8 cols) */}
+          <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-slate-900">Purchase records</h2>
+              <button
+                onClick={() => alert('All 24 purchases exported as CSV.')}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+              >
+                <span>Export</span>
+                <Download className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Filter controls */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
+              <div className="relative w-full sm:w-44">
+                <select
+                  value={selectedExpenseCategory}
+                  onChange={(e) => setSelectedExpenseCategory(e.target.value)}
+                  className="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 appearance-none pr-8 cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="All">All categories</option>
+                  <option value="Staples">Staples</option>
+                  <option value="Produce">Produce</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Pulses">Pulses</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+              </div>
+
+              <div className="relative w-full">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Search purchases"
+                  value={expenseSearchQuery}
+                  onChange={(e) => setExpenseSearchQuery(e.target.value)}
+                  className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 text-slate-800 placeholder-slate-400"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                    <th className="py-2.5 px-3">DATE</th>
+                    <th className="py-2.5 px-3">ITEM / QUANTITY</th>
+                    <th className="py-2.5 px-3">COST</th>
+                    <th className="py-2.5 px-3 text-right">RECEIPT</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredPurchases.map((p) => {
+                    const isSelected = selectedReceipt?.id === p.id;
+                    return (
+                      <tr
+                        key={p.id}
+                        onClick={() => setSelectedReceipt(p)}
+                        className={`cursor-pointer transition-colors ${
+                          isSelected ? 'bg-indigo-50/50' : 'hover:bg-slate-50/70'
+                        }`}
+                      >
+                        <td className="py-3 px-3 text-slate-600 font-medium whitespace-nowrap">{p.date}</td>
+                        <td className="py-3 px-3">
+                          <div className="font-semibold text-slate-900">{p.item}</div>
+                          <div className="text-[11px] text-slate-400">{p.category}</div>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-slate-800 whitespace-nowrap">₹{p.cost.toLocaleString('en-IN')}</td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className={`inline-flex items-center gap-1 font-semibold text-xs ${
+                            isSelected ? 'text-indigo-600 font-bold' : 'text-slate-400 hover:text-indigo-600'
+                          }`}>
+                            <span>{p.receiptId}</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Receipt Preview (4 cols) */}
+          <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-slate-900">Receipt preview</h2>
+                <span className="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
+                  {selectedReceipt?.receiptId || 'R-026'}
+                </span>
+              </div>
+
+              {/* Physical Receipt Container */}
+              <div className="bg-slate-50/80 rounded-xl border border-slate-200 p-4 text-xs font-mono space-y-3">
+                <div className="text-center pb-3 border-b border-dashed border-slate-300">
+                  <div className="font-bold text-slate-900 text-sm tracking-wider">
+                    {selectedReceipt?.vendor || 'CAMPUS GRAINS'}
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">
+                    Food supplies · Patel Mess
+                  </div>
+                  <div className="text-[9px] text-slate-400 uppercase tracking-widest mt-1">
+                    ILLUSTRATIVE RECEIPT
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-slate-600 space-y-1">
+                  <div>Purchase date: <span className="text-slate-800 font-semibold">{selectedReceipt?.date || '26 Oct 2026'}</span></div>
+                  <div>Reference: <span className="text-slate-800 font-semibold">DG-1026 · Patel Mess</span></div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200">
+                  <div className="flex items-center justify-between font-bold text-slate-900">
+                    <span>{selectedReceipt?.item || 'Sona masoori rice'}</span>
+                    <span>₹{selectedReceipt?.cost.toLocaleString('en-IN') || '6,000'}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    {selectedReceipt?.rateDetail || '100 kg × ₹60 / kg'}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-dashed border-slate-300 flex items-center justify-between font-bold text-slate-900 text-sm">
+                  <span>TOTAL PAID</span>
+                  <span className="text-indigo-600">₹{selectedReceipt?.cost.toLocaleString('en-IN') || '6,000'}</span>
+                </div>
+
+                <div className="text-[10px] text-slate-500 pt-1">
+                  Paid via bank transfer · No additional charges
+                </div>
+
+                <div className="pt-2 border-t border-slate-200 flex items-center gap-1.5 text-[11px] text-emerald-700 font-sans font-semibold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Recorded by Priya Mehta · {selectedReceipt?.date || '26 Oct'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3">
+              <button
+                onClick={() => alert(`Full digital tax invoice for ${selectedReceipt?.receiptId || 'R-026'} opened.`)}
+                className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <span>Open full receipt</span>
+                <Maximize2 className="w-3.5 h-3.5" />
+              </button>
+              <p className="text-[10px] text-slate-400 text-center mt-2">
+                Sample records for transparency. Receipt previews are illustrative.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // VIEW 2: MEAL OPT-IN / OPT-OUT MANAGEMENT
   // -------------------------------------------------------------
   if (activeTab === 'opt-in-out') {
@@ -995,12 +1531,9 @@ export default function StudentPortal({
                 <h3 className="text-base font-bold text-slate-900 mb-1">
                   {currentMeal?.name} is not available now
                 </h3>
-                <p className="text-xs text-slate-500 leading-relaxed mb-3">
+                <p className="text-xs text-slate-500 leading-relaxed">
                   This meal is served between <span className="font-semibold text-slate-700">{currentMeal?.start_time.slice(0, 5)}</span> and <span className="font-semibold text-slate-700">{currentMeal?.end_time.slice(0, 5)}</span>.
                 </p>
-                <div className="text-[11px] text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-xl p-2.5 font-medium">
-                  Tip: Use the <span className="font-bold">Time Simulator</span> at the top bar to test active meal windows anytime!
-                </div>
               </div>
             ) : qrError ? (
               <div className="bg-rose-50 border border-rose-200 rounded-3xl p-8 max-w-sm text-center my-4">
@@ -1048,46 +1581,21 @@ export default function StudentPortal({
                   Personal attendance code • Patel Mess
                 </p>
 
-                {/* Smooth Countdown Timer */}
-                <div className="mt-3 flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full shadow-sm text-xs font-bold">
-                  <RefreshCw className={`w-3.5 h-3.5 ${countdown <= 5 ? 'animate-spin text-amber-600' : 'text-indigo-600'}`} />
-                  <span>
-                    New code in 00:{countdown < 10 ? `0${countdown}` : countdown}
-                  </span>
-                  <div className="w-12 bg-indigo-200 h-1.5 rounded-full overflow-hidden ml-1">
-                    <div
-                      className="bg-indigo-600 h-full transition-all duration-1000 ease-linear rounded-full"
-                      style={{ width: `${(countdown / 30) * 100}%` }}
-                    ></div>
-                  </div>
+                {/* Single Daily Meal QR Badge */}
+                <div className="mt-3 flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2 rounded-full shadow-sm text-xs font-bold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Single-use daily meal QR • Screenshots accepted</span>
                 </div>
 
                 <p className="text-[11px] text-slate-400 mt-2 font-medium">
-                  Rotates every 30s • Valid for 60s • Single-use
+                  Valid for this meal session • Scannable once • Deactivated immediately upon entry
                 </p>
 
-                {/* Student verification tag & Token Copy for tester convenience */}
-                <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-4 text-xs">
+                {/* Student verification tag */}
+                <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center text-xs">
                   <div className="text-slate-700 font-medium">
                     <span className="font-bold text-slate-900">{user?.name}</span> • Roll: <span className="font-mono font-semibold">{user?.roll_no}</span>
                   </div>
-                  <button
-                    onClick={handleCopyToken}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-indigo-200 transition-all"
-                    title="Copy JWT token string for quick testing or manual scanner test"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-600" />
-                        <span className="text-emerald-600">Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>Copy token string</span>
-                      </>
-                    )}
-                  </button>
                 </div>
               </div>
             )}
@@ -1102,7 +1610,7 @@ export default function StudentPortal({
               <span>A fresh code. A fair system.</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed mb-6">
-              Your attendance code is cryptographically signed and designed to rotate every 30 seconds. Expired codes and screenshots are automatically rejected by counter scanners, preventing proxy attendance and maintaining meal inventory accuracy.
+              Your attendance code is unique to you, this meal, and today. You can display it live or take a screenshot to show at the counter. Once scanned at the counter, your entry is locked and the QR cannot be reused by anyone.
             </p>
 
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">

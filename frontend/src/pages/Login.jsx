@@ -21,6 +21,10 @@ export default function Login({ onLoginSuccess, initialRole = 'student' }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [resetOtp, setResetOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState(null);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpMessage, setOtpMessage] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [resetSuccess, setResetSuccess] = useState('');
 
@@ -111,7 +115,7 @@ export default function Login({ onLoginSuccess, initialRole = 'student' }) {
 
     try {
       setLoading(true);
-      const portalRole = (role === 'ADMIN' || role === 'STAFF') ? 'staff' : 'student';
+      const portalRole = role === 'ADMIN' ? 'admin' : (role === 'STAFF' ? 'staff' : 'student');
 
       const res = await api.login({
         email: cleanEmail,
@@ -136,7 +140,7 @@ export default function Login({ onLoginSuccess, initialRole = 'student' }) {
         setAuthToken(res.token);
       }
 
-      sessionStorage.setItem('refectory_user', JSON.stringify(user));
+      localStorage.setItem('refectory_user', JSON.stringify(user));
 
       if (onLoginSuccess) {
         onLoginSuccess(user);
@@ -317,14 +321,14 @@ export default function Login({ onLoginSuccess, initialRole = 'student' }) {
 
             <div className="hero-image-card">
               <img
-                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80"
-                alt="The Kamar-Taj Refectory Dining Hall"
+                src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1000&q=80"
+                alt="100% Pure Vegetarian Refectory Dining"
                 className="hero-image"
               />
               <div className="image-floating-badge">
                 <div className="floating-icon">✓</div>
                 <div>
-                  <div className="floating-text-bold">Predictive Mess Management Engine</div>
+                  <div className="floating-text-bold">100% Pure Vegetarian Campus Mess</div>
                   <div className="floating-text-sub">Zero-waste forecasting & rolling cryptographic QR tokens.</div>
                 </div>
               </div>

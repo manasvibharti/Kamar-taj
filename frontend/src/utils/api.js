@@ -84,5 +84,13 @@ export const api = {
 
   getRecentScans: () => request('/scan/recent'),
 
-  getTodayMealStats: () => request('/meals/today-stats')
+  getTodayMealStats: () => request('/meals/today-stats'),
+
+  getOptStatus: (date) => request(`/student/opt-status?date=${date || ''}`),
+
+  saveOptStatus: (date, optStatus) =>
+    request('/student/opt-status', {
+      method: 'POST',
+      body: JSON.stringify({ date, optStatus })
+    })
 };

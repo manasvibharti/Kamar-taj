@@ -19,7 +19,7 @@ export default function Sidebar({ user, activeTab = 'dashboard', onTabChange }) 
     { id: 'opt-in-out', label: 'Meal Opt In/Out', icon: SlidersHorizontal, badge: 'Cutoff 3h' },
     { id: 'budget', label: 'My meal budget', icon: Wallet },
     { id: 'expenses', label: 'Food expenses', icon: Receipt },
-    { id: 'special', label: 'Special meals', icon: Sparkles },
+
     { id: 'feedback', label: 'Meal feedback', icon: MessageSquare },
   ];
 
@@ -34,7 +34,7 @@ export default function Sidebar({ user, activeTab = 'dashboard', onTabChange }) 
             </div>
             <div>
               <div className="text-xs font-bold text-slate-800">
-                Patel Mess
+                Patel Mess (Pure Veg)
               </div>
               <div className="text-[10px] text-slate-400 font-medium">
                 {user?.role === 'student' ? 'Student Workspace' : 'Staff Terminal'}
@@ -110,7 +110,7 @@ export default function Sidebar({ user, activeTab = 'dashboard', onTabChange }) 
                 {user.name}
               </div>
               <div className="text-[10px] text-slate-500 truncate">
-                Patel Mess ({user.roll_no || 'Student'})
+                Patel Mess (Pure Veg) ({user.roll_no || 'Student'})
               </div>
             </div>
           </div>
