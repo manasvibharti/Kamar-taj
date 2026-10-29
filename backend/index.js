@@ -6,6 +6,7 @@ import mealRoutes from './routes/meals.js';
 import qrRoutes from './routes/qr.js';
 import scanRoutes from './routes/scan.js';
 import studentRoutes from './routes/student.js';
+import adminRoutes from './routes/admin.js';
 import { initDb } from './db/index.js';
 import { seed } from './db/seed.js';
 
@@ -29,6 +30,7 @@ app.use('/api/meals', mealRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -60,13 +62,11 @@ export async function startServer(port = PORT) {
         resolve(server);
       });
     });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    throw error;
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
   }
 }
 
-// Only auto-start if invoked directly as node index.js
-if (process.argv[1]?.replace(/\\/g, '/').endsWith('server/index.js') || process.argv[1]?.replace(/\\/g, '/').endsWith('index.js')) {
-  startServer();
-}
+// Auto-start server when run directly
+startServer(PORT);

@@ -27,19 +27,22 @@ export function authenticateToken(req, res, next) {
 
 /**
  * Role authorization middleware
- * @param {'student'|'staff'} role 
+ * Supports single or multiple roles; Admin role is also granted staff scanning privileges
  */
-export function requireRole(role) {
+export function requireRole(...allowedRoles) {
   return (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Unauthorized.' });
     }
-    if (req.user.role !== role) {
+    const roles = Array.isArray(allowedRoles[0]) ? allowedRoles[0] : allowedRoles;
+    const userRole = req.user.role;
+    const hasRole = roles.includes(userRole) || (roles.includes('staff') && userRole === 'admin');
+
+    if (!hasRole) {
       return res.status(403).json({
-        error: `Forbidden. This action requires ${role} privileges.`
+        error: `Forbidden. This action requires ${roles.join(' or ')} privileges.`
       });
     }
     next();
   };
 }
-

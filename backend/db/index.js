@@ -10,7 +10,7 @@ const { Pool } = pg;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/mess_db';
+const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/mess_db';
 
 let pool = null;
 let isPostgres = false;

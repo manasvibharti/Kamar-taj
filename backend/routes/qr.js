@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import db from '../db/index.js';
 import { JWT_SECRET, authenticateToken, requireRole } from '../middleware/auth.js';
@@ -9,7 +8,7 @@ const router = Router();
 
 /**
  * GET /api/qr/:mealId
- * Generates a signed, single-use, 60-second time-rotating JWT for student mess attendance
+ * Generates a single, deterministic, daily QR token per student per meal (screenshots work)
  */
 router.get('/:mealId', authenticateToken, requireRole('student'), async (req, res) => {
   try {
@@ -54,24 +53,21 @@ router.get('/:mealId', authenticateToken, requireRole('student'), async (req, re
       });
     }
 
-    // 4. Generate random nonce
-    const nonce = crypto.randomBytes(16).toString('hex');
-
-    // 5. Create signed JWT (Never plain text student credentials)
-    // Payload: { student_id, meal_id, date, nonce }
+    // 4. Create deterministic payload per student, meal, and date
+    // No random rotating nonce: The QR code is constant for this student for this meal today.
+    // A screenshot taken at any point will work seamlessly!
     const qrPayload = {
       student_id: studentId,
       meal_id: meal.id,
-      date: today,
-      nonce: nonce
+      date: today
     };
 
-    const token = jwt.sign(qrPayload, JWT_SECRET, { expiresIn: '60s' });
+    // Valid for 24 hours so screenshots during that meal work
+    const token = jwt.sign(qrPayload, JWT_SECRET, { expiresIn: '24h' });
 
     return res.json({
       token,
-      expiresIn: 60,
-      refreshInterval: 30,
+      expiresIn: 86400,
       meal: {
         id: meal.id,
         name: meal.name,
@@ -88,4 +84,3 @@ router.get('/:mealId', authenticateToken, requireRole('student'), async (req, re
 });
 
 export default router;
-

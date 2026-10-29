@@ -40,7 +40,7 @@ async function resolveRoleAndUser(email, fullName = 'College Member') {
   const isStaff = envStaff.includes(emailLower) || emailLower.includes('staff');
 
   if (isAdmin || isStaff) {
-    const role = 'staff';
+    const role = isAdmin ? 'admin' : 'staff';
     const username = isAdmin ? 'admin' : 'staff';
     let staffRes = await db.query('SELECT id, name, username FROM staff WHERE username = $1', [username]);
     let staffMember = staffRes.rows[0];
@@ -50,10 +50,10 @@ async function resolveRoleAndUser(email, fullName = 'College Member') {
       if (anyStaff.rows.length > 0) {
         staffMember = anyStaff.rows[0];
       } else {
-        const hash = await bcrypt.hash('staff123', 10);
+        const hash = await bcrypt.hash('Mnnit@2026', 10);
         await db.query(
           'INSERT INTO staff (name, username, password_hash) VALUES ($1, $2, $3)',
-          [fullName || (isAdmin ? 'Ancient One (Mess Admin)' : 'Wong (Mess Staff)'), username, hash]
+          [fullName || (isAdmin ? 'Priya Mehta (Mess Secretary)' : 'Rajesh Kumar (Counter Staff)'), username, hash]
         );
         const refetch = await db.query('SELECT id, name, username FROM staff WHERE username = $1', [username]);
         staffMember = refetch.rows[0];
@@ -62,7 +62,7 @@ async function resolveRoleAndUser(email, fullName = 'College Member') {
 
     return {
       id: staffMember?.id || 1,
-      role: 'staff',
+      role: role,
       name: staffMember?.name || fullName,
       username: staffMember?.username || username,
       email: emailLower
@@ -113,11 +113,11 @@ async function resolveRoleAndUser(email, fullName = 'College Member') {
   let student = studentRes.rows[0];
 
   if (!student) {
-    const hash = await bcrypt.hash('password123', 10);
+    const hash = await bcrypt.hash('Mnnit@2026', 10);
     const resolvedName = fullName || emailLower.split('@')[0].split('.')[0];
     await db.query(
       'INSERT INTO students (name, roll_no, hostel, password_hash) VALUES ($1, $2, $3, $4)',
-      [resolvedName, rollNo, 'North Block N-204', hash]
+      [resolvedName, rollNo, 'Patel Mess', hash]
     );
     const refetch = await db.query('SELECT id, name, roll_no, hostel FROM students WHERE roll_no = $1', [rollNo]);
     student = refetch.rows[0];
@@ -128,7 +128,7 @@ async function resolveRoleAndUser(email, fullName = 'College Member') {
     role: 'student',
     name: student?.name || fullName,
     roll_no: rollNo,
-    hostel: student?.hostel || 'North Block N-204',
+    hostel: student?.hostel || 'Patel Mess',
     email: emailLower
   };
 }
@@ -216,14 +216,14 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    if (targetRole === 'staff') {
+    if (targetRole === 'staff' || targetRole === 'admin') {
       const result = await db.query(
         'SELECT id, name, username, password_hash FROM staff WHERE username = $1',
         [loginId]
       );
       const staffMember = result.rows[0];
       if (!staffMember) {
-        return res.status(401).json({ error: 'No staff account found with this username.' });
+        return res.status(401).json({ error: 'No staff or admin account found with this username.' });
       }
 
       const isMatch = await bcrypt.compare(password, staffMember.password_hash);
@@ -231,10 +231,12 @@ router.post('/login', async (req, res) => {
         return res.status(401).json({ error: 'Incorrect passcode.' });
       }
 
+      const assignedRole = (staffMember.username === 'admin' || targetRole === 'admin') ? 'admin' : 'staff';
+
       const token = jwt.sign(
         {
           id: staffMember.id,
-          role: 'staff',
+          role: assignedRole,
           name: staffMember.name,
           username: staffMember.username
         },
@@ -247,7 +249,7 @@ router.post('/login', async (req, res) => {
         token,
         user: {
           id: staffMember.id,
-          role: 'staff',
+          role: assignedRole,
           name: staffMember.name,
           username: staffMember.username
         }
@@ -268,7 +270,7 @@ router.post('/login', async (req, res) => {
  */
 router.post('/google', async (req, res) => {
   try {
-    const { mockEmail, mockName, portal } = req.body;
+    const { mockEmail, mockName } = req.body;
     const email = mockEmail || req.body.email;
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
@@ -329,7 +331,9 @@ router.get('/me', authenticateToken, async (req, res) => {
         [id]
       );
       if (result.rows.length === 0) return res.status(404).json({ error: 'Staff not found.' });
-      return res.json({ user: { ...result.rows[0], role: 'staff', email: req.user.email } });
+      const staffUser = result.rows[0];
+      const assignedRole = (staffUser.username === 'admin' || role === 'admin') ? 'admin' : 'staff';
+      return res.json({ user: { ...staffUser, role: assignedRole, email: req.user.email } });
     }
   } catch (err) {
     console.error('[Auth API] Profile fetch error:', err);

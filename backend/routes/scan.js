@@ -8,13 +8,14 @@ const router = Router();
 
 /**
  * POST /api/scan
- * Validates scanned QR token in strict order specified:
+ * Validates scanned QR token in strict order:
  * 1. Only staff role can call it
- * 2. Verify JWT signature and expiry (60 seconds)
+ * 2. Verify JWT signature and validity (24h token for today's meal)
  * 3. Check token date equals today's date
  * 4. Check current time is inside the token meal's time window
- * 5. Insert into mess_entries; if UNIQUE constraint fails, return "Already eaten"
- * 6. Return student name, roll no, meal and status "Entry allowed"
+ * 5. Check if already scanned today: If so, reject as "Already eaten"
+ * 6. Insert into mess_entries; if UNIQUE constraint fails, return "Already eaten"
+ * 7. Return student name, roll no, meal and status "Entry allowed"
  */
 router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
   const mockTime = req.headers['x-mock-time'] || null;
@@ -31,7 +32,7 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
       });
     }
 
-    // CHECK 2: Verify the JWT signature and expiry (60 seconds)
+    // CHECK 2: Verify the JWT signature and expiry
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET);
@@ -39,7 +40,7 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
       if (jwtErr.name === 'TokenExpiredError') {
         return res.status(400).json({
           status: 'Expired QR',
-          error: 'QR code has expired (>60s). Please ask the student to display the refreshed code.'
+          error: 'QR code has expired. Please ask the student to display today\'s current QR.'
         });
       }
       return res.status(400).json({
@@ -61,7 +62,7 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
     if (tokenDate !== today) {
       return res.status(400).json({
         status: 'Invalid QR',
-        error: `QR code date (${tokenDate}) does not match current mess date (${today}). Old screenshots are invalid.`
+        error: `QR code date (${tokenDate}) does not match current mess date (${today}). Old screenshots from previous days are invalid.`
       });
     }
 
@@ -100,7 +101,30 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
     }
     const student = studentResult.rows[0];
 
-    // CHECK 5: Insert into mess_entries; if UNIQUE constraint fails, return "Already eaten"
+    // CHECK 5: Prevent double entry - Check if already scanned today
+    const existingEntry = await db.query(
+      'SELECT id, scanned_at FROM mess_entries WHERE student_id = $1 AND meal_id = $2 AND date = $3',
+      [student_id, meal_id, today]
+    );
+
+    if (existingEntry.rows.length > 0) {
+      return res.status(400).json({
+        status: 'Already eaten',
+        error: `${student.name} (${student.roll_no}) has already claimed ${meal.name} today. Double entries are blocked.`,
+        student: {
+          name: student.name,
+          roll_no: student.roll_no,
+          hostel: student.hostel
+        },
+        meal: {
+          id: meal.id,
+          name: meal.name
+        },
+        scanned_at: existingEntry.rows[0].scanned_at
+      });
+    }
+
+    // CHECK 6: Insert into mess_entries; if UNIQUE constraint fails, return "Already eaten"
     try {
       const nowIso = new Date().toISOString();
       const insertResult = await db.query(
@@ -112,7 +136,7 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
 
       const entry = insertResult.rows[0];
 
-      // CHECK 6: Return student name, roll no, meal and status
+      // CHECK 7: Return student name, roll no, meal and status "Entry allowed"
       return res.status(200).json({
         status: 'Entry allowed',
         message: 'Attendance successfully verified and recorded.',
@@ -135,9 +159,9 @@ router.post('/', authenticateToken, requireRole('staff'), async (req, res) => {
     } catch (insertErr) {
       // Postgres error code 23505 = unique_violation
       if (insertErr.code === '23505' || insertErr.message?.includes('unique') || insertErr.message?.includes('duplicate')) {
-        return res.status(409).json({
+        return res.status(400).json({
           status: 'Already eaten',
-          error: `${student.name} (${student.roll_no}) has already taken ${meal.name} today.`,
+          error: `${student.name} (${student.roll_no}) has already claimed ${meal.name} today. Double entries are blocked.`,
           student: {
             name: student.name,
             roll_no: student.roll_no
@@ -183,4 +207,3 @@ router.get('/recent', authenticateToken, requireRole('staff'), async (req, res) 
 });
 
 export default router;
-
