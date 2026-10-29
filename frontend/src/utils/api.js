@@ -57,11 +57,16 @@ async function request(endpoint, options = {}) {
 }
 
 export const api = {
-  login: (identifier, password, role) =>
-    request('/auth/login', {
+  login: (identifierOrCreds, password, role) => {
+    const body =
+      typeof identifierOrCreds === 'object'
+        ? identifierOrCreds
+        : { identifier: identifierOrCreds, password, role };
+    return request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ identifier, password, role })
-    }),
+      body: JSON.stringify(body)
+    });
+  },
 
   getMe: () => request('/auth/me'),
 
@@ -81,4 +86,3 @@ export const api = {
 
   getTodayMealStats: () => request('/meals/today-stats')
 };
-
