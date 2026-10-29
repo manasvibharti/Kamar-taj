@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Camera, CameraOff, RefreshCw, Zap, ShieldAlert, Sparkles, Send } from 'lucide-react';
 
-export default function QRScannerView({ onScan, isPaused, disabled }) {
+export default function QRScannerView({ onScan, onScanSuccess, isPaused, disabled }) {
+  const handleScanCallback = onScan || onScanSuccess;
   const [scannerStarted, setScannerStarted] = useState(false);
   const [cameraError, setCameraError] = useState(null);
   const [manualToken, setManualToken] = useState('');
@@ -54,7 +55,7 @@ export default function QRScannerView({ onScan, isPaused, disabled }) {
         (decodedText) => {
           if (!isScanningRef.current || isPaused) return;
           console.log('[Scanner] QR Code read:', decodedText);
-          onScan(decodedText);
+          if (handleScanCallback) handleScanCallback(decodedText);
         },
         (errorMessage) => {
           // ignore scan frame misses
@@ -96,7 +97,7 @@ export default function QRScannerView({ onScan, isPaused, disabled }) {
   const handleManualSubmit = (e) => {
     e.preventDefault();
     if (manualToken.trim()) {
-      onScan(manualToken.trim());
+      if (handleScanCallback) handleScanCallback(manualToken.trim());
       setManualToken('');
     }
   };
